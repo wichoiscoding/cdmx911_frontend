@@ -1,1 +1,20 @@
+.env
+.env.yaml
+train_flow-deployment.yaml
+
+# System files
+.DS_Store
+.ipynb_checkpoints
+*.pyc
+*.swp
+build/
+dist/
+.coverage
+*.iml
+*.egg-info
+*.vscode
+
+# Data files
+*.csv
+*.zip
 raw_data/
