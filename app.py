@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -54,3 +55,27 @@ st.plotly_chart(px.bar(filtered_data, x='incidente_c4', y='count', color='incide
 st.plotly_chart(px.pie(filtered_data, names='incidente_c4', values='count',
                        title=f'Incident Distribution in {file_name.split("/")[1].rstrip("_data.csv")} ({selected_year} - {selected_month})')
                )
+=======
+from flask import Flask, request, jsonify
+import joblib
+import pandas as pd
+
+app = Flask(__name__)
+
+# update with name and details
+model = joblib.load('emergency_call_model.pkl')
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    # get data with POST and convert to dataframe
+    data = request.get_json(force=True)
+    input_data = pd.DataFrame([data])
+
+
+    # make and return prediction
+    prediction = model.predict(input_data)
+    return jsonify(prediction.tolist())
+
+if __name__ == '__main__':
+    app.run(debug=True)
+>>>>>>> 721b202a95391da369974b91a8fb87b7cd8b0b32
