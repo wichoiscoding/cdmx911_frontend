@@ -3,11 +3,11 @@ import pandas as pd
 import geopandas as gpd
 import pydeck as pdk
 
+from functions import get_gcdata, show_dynamic_plot
+
 # Información sobre las alcaldías
 data = {
-    'Alcaldía': ['Álvaro Obregón', 'Azcapotzalco', 'Benito Juárez', 'Coyoacán', 'Cuajimalpa', 'Cuauhtémoc',
-                 'Gustavo A. Madero', 'Iztacalco', 'Iztapalapa', 'Magdalena Contreras', 'Miguel Hidalgo',
-                 'Milpa Alta', 'Tláhuac', 'Tlalpan', 'Venustiano Carranza', 'Xochimilco'],
+    'Alcaldía': ['ALVARO OBREGON', 'AZCAPOTZALCO', 'BENITO JUAREZ', 'COYOACAN', 'CUAJIMALPA', 'CUAUHTEMOC', 'GUSTAVO A. MADERO', 'IZTACALCO', 'IZTAPALAPA', 'MAGDALENA CONTRERAS', 'MIGUEL HIDALGO', 'MILPA ALTA', 'TLAHUAC', 'TLALPAN', 'VENUSTIANO CARRANZA', 'XOCHIMILCO'],
     'Latitud': [19.3587, 19.4869, 19.3620, 19.3139, 19.3584, 19.4326, 19.4814, 19.3951, 19.3558, 19.2966, 19.4329,
                 19.1406, 19.2861, 19.1963, 19.4319, 19.2480],
     'Longitud': [-99.2536, -99.1840, -99.1626, -99.1622, -99.2974, -99.1332, -99.1037, -99.0970, -99.0759, -99.2847,
@@ -23,9 +23,12 @@ gdf_alcaldias = gpd.read_file(geojson_path)
 
 # Página principal
 def main():
-    st.title("Mapa Interactivo de la Ciudad de México")
+    st.markdown("# Consola de Datos 911 CDMX")
+
+    st.markdown('### Obten informacion detallada acerca de los indicentes reportados al 911')
 
     # Mapa interactivo dividido por alcaldías
+
     alcaldia_seleccionada = st.selectbox("Selecciona una alcaldía:", df_alcaldias.index)
 
     # Obtener las coordenadas de la alcaldía seleccionada
@@ -52,15 +55,22 @@ def main():
     # Mostrar el mapa en Streamlit
     st.pydeck_chart(r)
 
-    if st.button("Ver más información"):
+    if st.button("Desplegar informacion Alcaldía"):
         # Navegar a la página de información detallada
         st.session_state.ubicacion_seleccionada = alcaldia_seleccionada
         st.experimental_rerun()
 
-# Página de información detallada
+    # Página de información detallada
 def mostrar_informacion_detallada():
     st.title(f"Información de la Alcaldía {st.session_state.ubicacion_seleccionada}")
-    st.write(f"Detalles de la Alcaldía {st.session_state.ubicacion_seleccionada}")
+
+    # Get gc data
+    data_alcaldia = get_gcdata(st.session_state.ubicacion_seleccionada)
+
+    # Show plot
+    show_dynamic_plot(data_alcaldia, st.session_state.ubicacion_seleccionada)
+
+
 
 # Manejo de la navegación entre páginas
 if 'ubicacion_seleccionada' not in st.session_state:
