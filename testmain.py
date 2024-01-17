@@ -5,7 +5,11 @@ import pydeck as pdk
 import os
 
 
-from functions import get_gcdata, show_dynamic_plot
+st.markdown("""
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css' rel='stylesheet' />
+    """, unsafe_allow_html=True)
+
+from functions import get_gcdata, show_dynamic_plot, get_feature_info
 
 # Información sobre las alcaldías
 data = {
@@ -20,39 +24,72 @@ df_alcaldias = pd.DataFrame(data)
 df_alcaldias.set_index('Alcaldía', inplace=True)
 
 # Cargar el archivo GeoJSON con los límites de las alcaldías
-geojson_path = 'archivo.geojson'
+#geojson_path = 'geo/archivo.geojson' #whole city
+geojson_path = 'geo/CDMX_Alcal.geojson'#city by alcaldia
 gdf_alcaldias = gpd.read_file(geojson_path)
+
 
 # Página principal
 def main():
     st.markdown("# Consola de Datos 911 CDMX")
 
     st.markdown('### Obten informacion detallada acerca de los incidentes reportados al 911')
+    extended_alcaldia_list = [''] + list(df_alcaldias.index)
 
     # Mapa interactivo dividido por alcaldías
+    alcaldia_seleccionada = st.selectbox("Selecciona una alcaldía:", extended_alcaldia_list, index=0)
 
-    alcaldia_seleccionada = st.selectbox("Selecciona una alcaldía:", df_alcaldias.index)
+    # locacion initial
+    def_latitude= 19.4326 # Latitude for Mexico City center
+    def_longitude=  -99.1332  # Longitude for Mexico City center
+    def_zoom= 10  # Adjusted zoom level to see the whole city
 
-    # Obtener las coordenadas de la alcaldía seleccionada
-    latitud = df_alcaldias.loc[alcaldia_seleccionada, 'Latitud']
-    longitud = df_alcaldias.loc[alcaldia_seleccionada, 'Longitud']
+    if alcaldia_seleccionada:
+        # Fetch and display information about the selected alcaldía
+        info = get_feature_info(alcaldia_seleccionada)
+        st.write(f"Information about {alcaldia_seleccionada}:")
+        st.json(info)
+
+        # Update the map based on the selection
+        latitud = df_alcaldias.loc[alcaldia_seleccionada, 'Latitud']
+        longitud = df_alcaldias.loc[alcaldia_seleccionada, 'Longitud']
+        zoom_level = 11
+    else:
+        # Default view when no selection is made
+        latitud = def_latitude
+        longitud = def_longitude
+        zoom_level = def_zoom
+
 
     # Visualizar el mapa
     view_state = pdk.ViewState(
         latitude=latitud,
         longitude=longitud,
-        zoom=12
+        zoom=zoom_level
     )
+
+
 
     layer_alcaldias = pdk.Layer(
-        "GeoJsonLayer",
-        data=gdf_alcaldias,
-        get_fill_color=[255, 0, 0, 100],
-        get_line_color=[0, 255, 0, 200],
-    )
+                                    "GeoJsonLayer",
+                                    data=gdf_alcaldias,
+                                    get_fill_color=[200, 30, 0, 100],  # Red, semi-transparent
+                                    get_line_color=[0, 0, 0, 100],  # Solid black lines
+                                    get_line_width=60, #thicc so they can be seen
+                                    pickable=True,
+                                    auto_highlight=True,
+                                    opacity=0.8,
+                                    tooltip={
+                                            "text": "{NOMGEO}"
+                                            }
+        )
 
 
-    r = pdk.Deck(layers=[layer_alcaldias], initial_view_state=view_state, map_style=None)
+
+    r = pdk.Deck(layers=[layer_alcaldias],
+                 initial_view_state=view_state,
+                 map_style=None
+)
 
     # Mostrar el mapa en Streamlit
     st.pydeck_chart(r)

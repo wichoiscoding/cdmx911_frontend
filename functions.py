@@ -8,6 +8,28 @@ import plotly.express as px
 import os
 
 
+def get_feature_info(alcaldia_name):
+    # dummy data
+    example_data = {
+        'ALVARO OBREGON': {'Population': 727034, 'Area': '96.17 sq km', 'Description': 'Known for its cultural history and landmarks.'},
+        'AZCAPOTZALCO': {'Population': 414711, 'Area': '33.66 sq km', 'Description': 'Industrial and commercial area.'},
+        'BENITO JUAREZ': {'Population': 385439, 'Area': '26.63 sq km', 'Description': 'Densely populated and commercially vibrant.'},
+        'COYOACAN': {'Population': 620416, 'Area': '54.40 sq km', 'Description': 'Cultural center, home to Frida Kahlo Museum.'},
+        'CUAJIMALPA': {'Population': 186391, 'Area': '70.28 sq km', 'Description': 'Contains large expanses of rural areas and forests.'},
+        'CUAUHTEMOC': {'Population': 531831, 'Area': '32.44 sq km', 'Description': 'Central borough, heart of the city.'},
+        'GUSTAVO A. MADERO': {'Population': 1185772, 'Area': '94.07 sq km', 'Description': 'Largest borough by population.'},
+        'IZTACALCO': {'Population': 384326, 'Area': '23.30 sq km', 'Description': 'Small in size but densely populated.'},
+        'IZTAPALAPA': {'Population': 1815786, 'Area': '116.67 sq km', 'Description': 'Largest borough by area, diverse and populous.'},
+        'MAGDALENA CONTRERAS': {'Population': 239086, 'Area': '74.58 sq km', 'Description': 'Known for its forested areas.'},
+        'MIGUEL HIDALGO': {'Population': 372889, 'Area': '46.99 sq km', 'Description': 'Affluent area with many embassies.'},
+        'MILPA ALTA': {'Population': 130582, 'Area': '228.41 sq km', 'Description': 'Rural borough with a strong indigenous presence.'},
+        'TLAHUAC': {'Population': 360265, 'Area': '85.34 sq km', 'Description': 'Rural and urban mix, known for its chinampas.'},
+        'TLALPAN': {'Population': 650567, 'Area': '312.00 sq km', 'Description': 'Largest borough by land, with many ecological reserves.'},
+        'VENUSTIANO CARRANZA': {'Population': 430978, 'Area': '33.42 sq km', 'Description': 'Location of the Mexico City International Airport.'},
+        'XOCHIMILCO': {'Population': 415007, 'Area': '118.00 sq km', 'Description': 'Famous for its canals and chinampas.'}
+    }
+    return example_data.get(alcaldia_name, {'Population': 'Unknown', 'Area': 'Unknown', 'Description': 'No data available.'})
+
 
 def get_gcdata(name_alcaldia):
     #gc info
