@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import geopandas as gpd
 import pydeck as pdk
+import os
+
 
 from functions import get_gcdata, show_dynamic_plot
 
@@ -25,7 +27,7 @@ gdf_alcaldias = gpd.read_file(geojson_path)
 def main():
     st.markdown("# Consola de Datos 911 CDMX")
 
-    st.markdown('### Obten informacion detallada acerca de los indicentes reportados al 911')
+    st.markdown('### Obten informacion detallada acerca de los incidentes reportados al 911')
 
     # Mapa interactivo dividido por alcaldías
 

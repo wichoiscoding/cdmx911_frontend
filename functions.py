@@ -5,6 +5,8 @@ import pydeck as pdk
 from google.cloud import storage
 from io import BytesIO
 import plotly.express as px
+import os
+
 
 
 def get_gcdata(name_alcaldia):
@@ -13,16 +15,23 @@ def get_gcdata(name_alcaldia):
     file_name = f'completa-alcaldia/{name_alcaldia}_data.csv'
     project_id = 'lewagon-bootcamp-404323'
 
-    # Configura la conexión a gc
-    client = storage.Client(project=project_id)
-    bucket = client.bucket(bucket_name)
+    # Verificar si el archivo ya existe localmente
+    local_file_path = file_name
 
-    # Descarga el archivo CSV como BytesIO
-    blob = bucket.blob(file_name)
-    content = blob.download_as_text()
-    csv_data = BytesIO(content.encode('utf-8'))
+    if os.path.exists(local_file_path):
+        data_alcaldia = pd.read_csv(local_file_path)
 
-    data_alcaldia = pd.read_csv(csv_data)
+    else:
+        # Configura la conexión a gc
+        client = storage.Client(project=project_id)
+        bucket = client.bucket(bucket_name)
+
+        # Descarga el archivo CSV como BytesIO
+        blob = bucket.blob(file_name)
+        content = blob.download_as_text()
+        csv_data = BytesIO(content.encode('utf-8'))
+
+        data_alcaldia = pd.read_csv(csv_data)
     return data_alcaldia
 
 
