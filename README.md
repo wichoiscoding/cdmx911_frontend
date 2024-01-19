@@ -1,4 +1,4 @@
-# Step by step of how to run the API (Local)
+# Step by step of how to run the frontend
 
 ## Step one: You need to clone the repository url:
 
