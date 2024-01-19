@@ -11,6 +11,7 @@ API_HOST_LOCAL = os.getenv('SERVICE_URL')
 st.set_page_config(layout="wide")
 
 
+
 # Get main map
 response = requests.get(API_HOST_LOCAL + '/main-map')
 mapa = gpd.read_file(response.text, driver='GeoJSON')

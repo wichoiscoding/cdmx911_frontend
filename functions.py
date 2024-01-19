@@ -170,6 +170,33 @@ def show_predicted_incidents(alcaldia_seleccionada):
     :param model_data: Dictionary containing month names as keys and predicted incident counts as values.
     """
 
+    print("Raw Predicted Data:", type(predicted_data))
+
+    if not isinstance(predicted_data, pd.DataFrame) or 'data' not in predicted_data:
+        print("Incorrect data format. 'predicted_data' should be a DataFrame with a 'data' column.")
+        return
+
+    actual_data = predicted_data['data'].iloc[0]
+    if not isinstance(actual_data, dict):
+        print("The 'data' column does not contain a dictionary.")
+        return
+
+    # Convert the dictionary to a pandas DataFrame for easier manipulation
+    df = pd.DataFrame(list(actual_data.items()), columns=['Month', 'Predicted Incidents'])
+    # Convert 'Month' to a categorical type for proper sorting in the plot
+    print("DataFrame after conversion:", df.head())
+
+    df['Month'] = pd.Categorical(df['Month'], categories=[
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'],
+        ordered=True)
+    df.sort_values('Month', inplace=True)
+    print(df.head(10))
+    print(df.info())
+    # Create a line chart
+    line_chart = go.Figure()
+    line_chart.add_trace(go.Scatter(x=df['Month'], y=df['Predicted Incidents'], mode='lines+markers',
+                                    name='Predicted Incidents', line=dict(color='blue', width=2)))
 
     alcaldia_info = get_feature_info(alcaldia_seleccionada.title())
     population = alcaldia_info.get('Population', 1)  # Default to 1 to avoid division by zero
