@@ -97,7 +97,7 @@ def get_feature_info(alcaldia_name=None):
     else:
         return alcaldias_info.get(alcaldia_name, {'Population': 'Unknown', 'Area': 'Unknown', 'Description': 'No data available.'})
 
-API_HOST_LOCAL = os.getenv('API_HOST_LOCAL')
+API_HOST_LOCAL = os.getenv('SERVICE_URL')
 
 
 def show_dynamic_plot(name_alcaldia):

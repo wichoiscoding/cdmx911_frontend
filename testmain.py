@@ -7,7 +7,7 @@ import requests
 
 from functions import show_dynamic_plot, show_historic_tvsf, show_predicted_incidents, get_feature_info, show_aggregated_predictions
 
-API_HOST_LOCAL = os.getenv('API_HOST_LOCAL')
+API_HOST_LOCAL = os.getenv('SERVICE_URL')
 st.set_page_config(layout="wide")
 
 
