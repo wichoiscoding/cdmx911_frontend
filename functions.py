@@ -10,7 +10,7 @@ import os
 import requests
 
 
-API_HOST_LOCAL = os.getenv('API_HOST_LOCAL')
+API_HOST_LOCAL = os.getenv('SERVICE_URL')
 
 
 def show_dynamic_plot(name_alcaldia):
@@ -82,7 +82,7 @@ def show_predicted_incidents(predicted_data):
     :param predicted_data: Dictionary containing month names as keys and predicted incident counts as values.
     """
 
-    print("Raw Predicted Data:", predicted_data)
+    print("Raw Predicted Data:", type(predicted_data))
 
     if not isinstance(predicted_data, pd.DataFrame) or 'data' not in predicted_data:
         print("Incorrect data format. 'predicted_data' should be a DataFrame with a 'data' column.")

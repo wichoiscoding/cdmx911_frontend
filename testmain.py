@@ -7,7 +7,7 @@ import requests
 
 from functions import show_dynamic_plot, show_historic_tvsf, show_predicted_incidents
 
-API_HOST_LOCAL = os.getenv('API_HOST_LOCAL')
+API_HOST_LOCAL = os.getenv('SERVICE_URL')
 
 
 # Get main map
