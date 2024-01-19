@@ -5,7 +5,7 @@ import pydeck as pdk
 import os
 import requests
 
-from functions import show_dynamic_plot, show_historic_tvsf
+from functions import show_dynamic_plot, show_historic_tvsf, show_predicted_incidents
 
 API_HOST_LOCAL = os.getenv('API_HOST_LOCAL')
 
@@ -39,6 +39,11 @@ def main():
         zoom=12
     )
 
+    response = requests.get(API_HOST_LOCAL + '/model-data', params=params).json()
+    data_grouped = pd.DataFrame.from_dict([response])
+
+
+
     layer_alcaldias = pdk.Layer(
         "GeoJsonLayer",
         data=mapa,
@@ -62,6 +67,9 @@ def main():
         # Navegar a la página de información detallada
         st.session_state.ubicacion_seleccionada = alcaldia_seleccionada
         st.experimental_rerun()
+
+    st.markdown('## Predicciones de Incidentes')
+    show_predicted_incidents(data_grouped)
 
     # Historic True vs False case calls
     show_historic_tvsf()
